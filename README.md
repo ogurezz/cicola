@@ -1,2 +1,2 @@
 # cicola
-Test Cities-Countries-Langueges (cicola)
+Test Cities-Countries-Languages (cicola)
