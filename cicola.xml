@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="2.0.0" method="upgrade">
+  <name>COM_CICOLA</name><!-- Идентификатор строки, содерж название компон в языковых файлах -->
+  <creationDate>April 2016</creationDate>
+  <author>Savchenko Yurii</author>
+  <authorEmail>ogur-ezz@yandex.ua</authorEmail>
+  <authorUrl></authorUrl>
+  <copyright>Copyright (c) 2016 - Savchenko Yurii. All rights reserved.</copyright>
+  <license></license>
+  <version>1.0.0</version>
+  <description>COM_CICOLA_DESCRIPTION</description>
+
+  <!-- Запускается при установке -->
+  <install>
+      <sql>
+      <file charset="utf8" driver="mysql">install.mysql.sql</file>
+      </sql>
+  </install>
+
+  <!-- Запускается при удалении -->
+  <!--
+  <uninstall> 
+    <sql>
+      <file driver="mysql" charset="utf8">uninstall.mysql.sql</file>
+    </sql>
+  </uninstall>
+  -->
+
+  <files folder="site">
+    <folder>assets</folder>
+    <folder>controllers</folder>
+    <folder>helpers</folder>
+    <folder>languages</folder>
+    <folder>models</folder>
+    <folder>tables</folder>
+    <folder>views</folder>
+    <filename>index.html</filename>
+    <filename>cicola.php</filename>
+    <filename>router.php</filename>
+  </files>
+
+  
+  <languages folder="site">
+    <language tag="en-GB">languages/en-GB/en-GB.com_cicola.ini</language>
+    <language tag="ru-RU">languages/ru-RU/ru-RU.com_cicola.ini</language>
+  </languages>
+  
+  <administration>
+    <menu link="option=com_cicola">COM_CICOLA_MENUITEM</menu>
+    <submenu>
+      <menu controller="cities" alt="cicola/Cities">COM_CICOLA_SUBMENUITEM_CITIES</menu>
+        
+      <menu controller="countries" alt="cicola/Countries">COM_CICOLA_SUBMENUITEM_COUNTRIES</menu>
+
+      <menu controller="languages" alt="CInema/Languages">COM_CICOLA_SUBMENUITEM_LANGUAGES</menu>
+    </submenu>
+
+
+    <files folder="admin">
+      <folder>controllers</folder>
+      <folder>helpers</folder>
+      <folder>languages</folder>
+      <folder>models</folder>
+      <folder>views</folder>
+      <filename>cicola.php</filename>
+      <filename>index.html</filename>
+      <filename>install.mysql.sql</filename>
+    </files>
+    
+<languages folder="admin">
+      <language tag="en-GB">languages/en-GB/en-GB.com_cicola.ini</language>
+      <language tag="en-GB">languages/en-GB/en-GB.com_cicola.sys.ini</language>
+      <language tag="ru-RU">languages/ru-RU/ru-RU.com_cicola.ini</language>
+      <language tag="ru-RU">languages/ru-RU/ru-RU.com_cicola.sys.ini</language>
+    </languages>
+    
+  </administration>
+
+  <!-- Запускается при установке/удалении/обновлении -->
+  <scriptfile>install.package.php</scriptfile>
+
+</extension> 
