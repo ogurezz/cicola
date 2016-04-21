@@ -1,6 +1,36 @@
 <?php 
 defined("_JEXEC") or die("Restricted access");
 
+class ItemData
+{
+  public $id;    // ID
+  public $name;  //Название
+
+  //$row - строка, выбранная из таблицы базы данных
+  
+  public function __construct($row=null)
+  {
+    if ($row == null ) {
+      $this->id = 0;
+      $this->name = "";
+    }
+    else
+    {
+      $this->id = $row->id;
+      $this->name = $row->name;
+    }
+  }
+  /**
+   * Получение значения переменных из HTTP-запроса
+   */
+  public function initFromRequest()
+  {
+    $app = JFactory::getApplication();
+    $this->id = $app->get('id','');
+    $this->name = $app->getString('name','');
+  }
+}
+
 class CicolaControllersLanguages extends JControllerAdmin
 {
   function display($cachable = false, $urlparams = Array())
@@ -61,9 +91,43 @@ class CicolaControllersLanguages extends JControllerAdmin
     $this->registerTask('apply',   'apply');    //Кнопка "Применить" в добавлении/редактировании
   }
 
+public function AddOrEdit($obj, $title, $isAdd)
+  {
+    // --------Вывод заголовка----------
+    JToolbarHelper::title(JText::_('COM_CICOLA_LANGUAGES_TITLE')." - ".$title);
+    // ---------Кнопки------------------
+    JToolbarHelper::apply();
+    JToolbarHelper::cancel();
+    echo "<h2>$title</h2>"
+    // ---------Форма-------------------
+  ?>
+
+  <form action="index.php" method="POST" name="adminForm" id="adminForm">
+    <input type="hidden" name="task" value="">
+    <input type="hidden" name="option" value="com_cicola">
+    <input type="hidden" name="controller" value="languages">
+
+    <input type="hidden" name="id" value="<?php echo $obj->id; ?>">
+    <input type="hidden" name="is_add" value="<?php echo $isAdd; ?>">
+
+    <table>
+      <tbody>
+        <tr>
+          <td width = "300">Язык</td>
+          <td>
+            <input class="inputbox" type="text" name="name" id="name" size="60" value="<?php echo $obj->name;?>">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+<?php 
+  }
+
+
   function add()
   {
-    echo "<h1>Task: add</h1>";
+    $this->AddOrEdit(new ItemData(),"Добавление нового языка",true );
   }
 
   function edit()
