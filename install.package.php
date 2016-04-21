@@ -41,6 +41,9 @@ class com_cicolaInstallerScript
         "id_language int".
         ") DEFAULT CHARSET=utf8";
 
+    $db->setQuery($q);
+    $db->execute();
+
   // ----- Создание таблицы "Страны" --------------------------------
     $q  = "CREATE TABLE #__ccl_countries(".
         "id int not null primary key auto_increment, ".
@@ -58,6 +61,28 @@ class com_cicolaInstallerScript
 
     $db->setQuery($q);
     $db->execute();
+
+    // ----- Заполнение таблицы Страны  ----------------
+  $arrCountries = array("Украина", "Польша", "Чехия", "Германия", "Франция");
+  for ($i = 0; $i < count($arrCountries); $i++)
+  {
+    $db->setQuery("INSERT INTO #__ccl_countries (name) VALUES ('{$arrCountries[$i]}')");
+    $db->execute();
+  }
+
+  // ----- Заполнение таблицы Языки  ----------------
+  $arrLanguages = array("Украинский", "Русский", "Польский", "Чешский", "Немецкий", "Французский");
+  for ($i = 0; $i < count($arrLanguages); $i++)
+  {
+    $db->setQuery("INSERT INTO #__ccl_languages (name) VALUES ('{$arrLanguages[$i]}')");
+    $db->execute();
+  }
+
+  // ----- Занесение некоторых городов  ----------------
+$db->setQuery("INSERT INTO #__ccl_cities (name,id_country, id_language) VALUES('Запорожье',1,2)");
+$db->execute();
+$db->setQuery("INSERT INTO #__ccl_cities (name,id_country, id_language) VALUES('Киев',1,1)");
+$db->execute();
 
   // ----- Вывод информации о результатах инсталляции ----------------
     JFactory::getApplication()->enqueueMessage(JText::_('COM_CICOLA_INSTALL_SUCCESSFULL'), 'message');
