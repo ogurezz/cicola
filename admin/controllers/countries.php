@@ -26,8 +26,8 @@ class ItemData
   public function initFromRequest()
   {
     $app = JFactory::getApplication();
-    $this->id = $app->get('id','');
-    $this->name = $app->getString('name','');
+    $this->id = $app->input->get('id','');
+    $this->name = $app->input->getString('name','');
   }
 }
 
@@ -257,7 +257,35 @@ Joomla.submitbutton = function(task)
   }
 function apply()
   {
-    echo "<h1>Task: apply</h1>";
+    $app = JFactory::getApplication();
+    $db = JFactory::getDBO();
+
+    //Определение - будет добавление или обновление----------------------
+    $isAdd = $app->input->get('is_add',true);
+    //--Формирование модели ItemData из HTTP-запроса---------------------
+    $obj = new ItemData();
+    $obj->initFromRequest();
+
+    if ($isAdd == true) 
+    {
+      //-------Добавление-----------
+      $q = "INSERT INTO #__ccl_countries(name) VALUES ("."'".$obj->name."'".")";//Название страны
+    }
+    else 
+    {
+      //---Редактирование (обновление)--
+      $q = "UPDATE #__ccl_countries SET name='{$obj->name}' WHERE id={$obj->id}";
+    }
+    //---Отправка запроса---------------
+    $db->setQuery($q);
+    $db->execute();
+    //Сообщение об успешном завершении операции
+    
+    $app->enqueueMessage("Обновление успешно осуществлено", "message");
+
+    //Переход на отображение списка-------------------
+    
+    $this->display();
   }
 
 }

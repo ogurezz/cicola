@@ -212,8 +212,6 @@ $languages = $db->loadObjectList();
 Joomla.submitbutton = function(task)
 {
   var form        = document.adminForm;
-  var now         = new Date;
-  var currentYear = now.getFullYear();
   if (task == 'cancel')
   {
     //----Отмена изменений-------------
@@ -237,9 +235,6 @@ Joomla.submitbutton = function(task)
       alert('Язык не выбран');
       return;
     }
-    return;
-    }
-
   }
   Joomla.submitform(task,document.getElementById('adminForm'));
 }
@@ -310,7 +305,46 @@ Joomla.submitbutton = function(task)
   }
   function apply()
   {
-    echo "<h1>Task: apply</h1>";
+    $app = JFactory::getApplication();
+    $db  = JFactory::getDBO();
+
+    //Определение - будет добавление или обновление----------------------
+    $isAdd = $app->input->get('is_add',true);
+    //--Формирование модели ItemData из HTTP-запроса---------------------
+    $obj = new ItemData();
+    $obj->initFromRequest();
+
+    if ($isAdd == true) 
+    {
+      //-------Добавление-----------
+      //Чтобы избежать внесение в БД дублей будем проверять наличие в БД городов с тем же названием 
+      $q = "SELECT name FROM #__ccl_cities WHERE name='{$obj->name}'";
+      $db->setQuery($q);
+      
+      if ($db->loadResult())
+      {
+        $app->enqueueMessage("Город уже внесен в Базу Данных", "error");
+      }
+      else
+      {
+        $q = "INSERT INTO #__ccl_cities (name, id_country, id_language) VALUES ('".$obj->name."','".$obj->id_country."','".$obj->id_language."')";
+      }
+    }
+    else 
+    {
+      //---Редактирование (обновление)--
+      $q = "UPDATE #__ccl_cities SET name='{$obj->name}', id_country = '{$obj->id_country}', id_language='{$obj->id_language}' WHERE id={$obj->id}";
+      
+    }
+    
+    //---Отправка запроса---------
+    $db->setQuery($q);
+    $db->execute();
+    //Сообщение об успешном завершении операции
+    $app->enqueueMessage("Обновление успешно осуществлено", "message");
+    //Переход на отображение списка фильмов-------------------
+    
+    $this->display();
   }
 
 
