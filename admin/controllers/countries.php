@@ -77,6 +77,31 @@ class CicolaControllersCountries extends JControllerAdmin
 ?>
       </table>
     </form>
+    <script type="text/javascript">
+/**
+ * Функция валидации данных форм (вызывается автоматически)
+ */
+Joomla.submitbutton = function(task)
+{
+  var form = document.adminForm;
+  if (task == 'cancel')
+  {
+    //----Отмена изменений-------------
+    Joomla.submitform(task, document.getElementById('adminForm'));
+    return
+  }
+  if (task == 'apply')
+  {
+    if (form.name.value == '') 
+    {
+      alert('Имя Режиссёра не введено');
+      return;
+    }
+
+  }
+  Joomla.submitform(task,document.getElementById('adminForm'));
+}
+</script>
 <?php
   
   }
@@ -101,6 +126,8 @@ class CicolaControllersCountries extends JControllerAdmin
    */
   public function AddOrEdit($obj, $title, $isAdd)
   {
+    //Сделать меню админки недоступным
+    JFactory::getApplication()->input->set('hidemainmenu',1);
     // --------Вывод заголовка----------
     JToolbarHelper::title(JText::_('COM_CICOLA_COUNTRIES_TITLE')." - ".$title);
     // ---------Кнопки------------------
@@ -129,6 +156,31 @@ class CicolaControllersCountries extends JControllerAdmin
       </tbody>
     </table>
   </form>
+  <script type="text/javascript">
+/**
+ * Функция валидации данных форм (вызывается автоматически)
+ */
+Joomla.submitbutton = function(task)
+{
+  var form = document.adminForm;
+  if (task == 'cancel')
+  {
+    //----Отмена изменений-------------
+    Joomla.submitform(task, document.getElementById('adminForm'));
+    return
+  }
+  if (task == 'apply')
+  {
+    if (form.name.value == '') 
+    {
+      alert('Название страны не введено');
+      return;
+    }
+
+  }
+  Joomla.submitform(task,document.getElementById('adminForm'));
+}
+</script>
 <?php 
   }
 
@@ -140,7 +192,33 @@ class CicolaControllersCountries extends JControllerAdmin
 
   function edit()
   {
-    echo "<h1>Task: edit</h1>";
+    $app = JFactory::getApplication();
+    $db = JFactory::getDBO();
+    try
+    {
+      //Проверка того, что выбран элемент для редактирования
+      $id = $app->input->get('boxchecked','');
+      if ($id=='')
+      {
+        throw new Exception("Не выбран элемент списка для редактирования");
+      } 
+      //Получение Стран для редактирования из базы даных---
+      $db->setQuery("SELECT * FROM #__ccl_countries WHERE id='{$id}'");
+      $obj = $db->loadObject();
+      if ($obj == null) 
+      {
+        throw new Exception("Страна не найдена в Базе Данных");
+       }
+
+       $item = new ItemData($obj);//Инициализируем  модель ItemData из строки таблицы (obj->id и obj->name)
+       $this->AddOrEdit ($item, "Редактирование страны - ".$item->name, false);
+    }
+    catch (Exception $e)
+    {
+      $app->input->set('task','');//Нужно сбросить значение task
+      $app->enqueueMessage($e->getMessage(), 'error');
+      $this->display();
+    }
   }
   function remove()
   {
@@ -174,7 +252,8 @@ class CicolaControllersCountries extends JControllerAdmin
   }
   function cancel()
   {
-    echo "<h1>Task: cancel</h1>";
+       //Переход на отображение списка-------------------
+    $this->display();
   }
 function apply()
   {
