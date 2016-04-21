@@ -72,7 +72,33 @@ class CicolaControllersLanguages extends JControllerAdmin
   }
   function remove()
   {
-    echo "<h1>Task: remove</h1>";
+    $app = JFactory::getApplication();
+    $db = JFactory::getDBO();
+
+    $id = $app->input->get('boxchecked', '');
+    if ($id == '')
+    {
+      $app->enqueueMessage('Не выбран элемент списка для удаления', 'error');
+    }
+    else
+    {
+      
+      /*Проверка наличия городов с выбранным языком*/
+      $db->setQuery("SELECT COUNT(*) AS cnt FROM #__ccl_cities WHERE id_language=$id");
+      $cnt = $db->loadObject()->cnt;
+      if ($cnt > 0)
+      {
+        $app->enqueueMessage('Невозможно удалить: с данным языком связаны некоторые города', 'error');
+      }
+      else
+      { 
+        $query = "DELETE FROM #__ccl_languages WHERE id=".$id;
+         $db->setQuery($query);
+        $db->execute();
+        $app->enqueueMessage("Элемент удален успешно",'message');
+      }
+    }
+    $this->display();
   }
 function cancel()
   {
