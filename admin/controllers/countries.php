@@ -49,7 +49,7 @@ class CicolaControllersCountries extends JControllerAdmin
     $rows = $db->loadObjectList();
     if ($rows == null)
     {
-      JFactory::getApplication()->enqueueMessage("Ошибка получения жанров из БД", 'error');
+      JFactory::getApplication()->enqueueMessage("Ошибка получения стран из БД", 'error');
       return;
     }
     echo "<h1>Список Стран</h1>";
@@ -94,7 +94,7 @@ Joomla.submitbutton = function(task)
   {
     if (form.name.value == '') 
     {
-      alert('Имя Режиссёра не введено');
+      alert('Название страны не введено');
       return;
     }
 
@@ -176,15 +176,12 @@ Joomla.submitbutton = function(task)
       alert('Название страны не введено');
       return;
     }
-
   }
   Joomla.submitform(task,document.getElementById('adminForm'));
 }
 </script>
 <?php 
   }
-
-
   function add()
   {
     $this->AddOrEdit(new ItemData(),"Добавление новой страны",true );
@@ -269,19 +266,33 @@ function apply()
     if ($isAdd == true) 
     {
       //-------Добавление-----------
-      $q = "INSERT INTO #__ccl_countries(name) VALUES ("."'".$obj->name."'".")";//Название страны
+      //Чтобы избежать внесение в БД дублей будем проверять наличие в БД стран с тем же названием 
+      $q = "SELECT name FROM #__ccl_countries WHERE name='{$obj->name}'";
+      $db->setQuery($q);
+      if ($db->loadResult())
+      {
+        $app->enqueueMessage("Страна уже внесена в Базу Данных", "error");
+      }
+      else
+      {
+        $q = "INSERT INTO #__ccl_countries(name) VALUES ("."'".$obj->name."'".")";//Название страны
+         //---Отправка запроса----
+        $db->setQuery($q);
+        $db->execute();
+        //Сообщение об успешном завершении операции
+        $app->enqueueMessage("Добавление успешно осуществлено", "message");
+      }
     }
     else 
     {
       //---Редактирование (обновление)--
       $q = "UPDATE #__ccl_countries SET name='{$obj->name}' WHERE id={$obj->id}";
+      //---Отправка запроса---------------
+      $db->setQuery($q);
+     $db->execute();
+      //Сообщение об успешном завершении операции
+      $app->enqueueMessage("Обновление успешно осуществлено", "message");
     }
-    //---Отправка запроса---------------
-    $db->setQuery($q);
-    $db->execute();
-    //Сообщение об успешном завершении операции
-    
-    $app->enqueueMessage("Обновление успешно осуществлено", "message");
 
     //Переход на отображение списка-------------------
     

@@ -1,18 +1,17 @@
-MY TEST REPOSITORY
-===========
+Тестовое задание
+=================
 
-Something here
+Выполнено как компонент для CMS Joomla 3.x
+Название компонента - cicola (CIty-COuntry-LAnguage)
 
-Another paragraph of text
+В админской части можно редактировать, добавлять, удалять элементы
+В клиентской части можно определить язык для выбранного города в выбранной стране
 
-<p>It is the test thing that do nothing</p>
+Дамп базы данных - dump.sql
 
-1. This is the first item
-2. This is the second item
-3. This is the third item
+Готовый к установке архив - cicola.zip
 
-* Item with round point
-* And one more item with round point
+Остальные файлы относятся к проекту
 
-You can connect with us by email: something@smth.com
-Do not forget to visit our website: [click here](http://test.com/)
+Савченко Юрий
+ogur-ezz@yandex.ua

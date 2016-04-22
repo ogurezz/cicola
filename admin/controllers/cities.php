@@ -328,6 +328,11 @@ Joomla.submitbutton = function(task)
       else
       {
         $q = "INSERT INTO #__ccl_cities (name, id_country, id_language) VALUES ('".$obj->name."','".$obj->id_country."','".$obj->id_language."')";
+         //---Отправка запроса---------
+        $db->setQuery($q);
+        $db->execute();
+        //Сообщение об успешном завершении операции
+        $app->enqueueMessage("Обновление успешно осуществлено", "message");
       }
     }
     else 
@@ -335,13 +340,13 @@ Joomla.submitbutton = function(task)
       //---Редактирование (обновление)--
       $q = "UPDATE #__ccl_cities SET name='{$obj->name}', id_country = '{$obj->id_country}', id_language='{$obj->id_language}' WHERE id={$obj->id}";
       
-    }
-    
     //---Отправка запроса---------
     $db->setQuery($q);
     $db->execute();
     //Сообщение об успешном завершении операции
     $app->enqueueMessage("Обновление успешно осуществлено", "message");
+    }
+    
     //Переход на отображение списка фильмов-------------------
     
     $this->display();

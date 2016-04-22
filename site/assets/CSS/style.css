@@ -1,0 +1,41 @@
+.ccl_form h1{ 
+    text-align: center;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 52px;
+    margin: 0;
+    margin-bottom: 16px;
+}
+.ccl_form h4{
+  font-size: 16px;
+  text-align: left;
+  width:25%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 10px;
+}
+.ccl_form input[type=text], .ccl_form select{
+    border: 1px #aaa solid;
+    background: #eee;
+    color: #676056;
+    text-indent: 10px;    
+    width: 50%;
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 28px;
+    border-radius: 4px;
+}
+
+.ccl_form input[type=text]{
+width: 50%;
+}
+.ccl_form select{
+width: 40%;
+}
+
+.ccl_form input[type=text]:hover, .ccl_form select:hover{
+    background: #fff;
+}
+
+

@@ -49,7 +49,7 @@ class CicolaControllersLanguages extends JControllerAdmin
     $rows = $db->loadObjectList();
     if ($rows == null)
     {
-      JFactory::getApplication()->enqueueMessage("Ошибка получения жанров из БД", 'error');
+      JFactory::getApplication()->enqueueMessage("Ошибка получения языков из БД", 'error');
       return;
     }
     echo "<h1>Список Языков</h1>";
@@ -236,19 +236,33 @@ function apply()
     if ($isAdd == true) 
     {
       //-------Добавление-----------
-      $q = "INSERT INTO #__ccl_languages(name) VALUES ("."'".$obj->name."'".")";//Название языка
+      //Чтобы избежать внесение в БД дублей будем проверять наличие в БД языков с тем же названием 
+      $q = "SELECT name FROM #__ccl_languages WHERE name='{$obj->name}'";
+      $db->setQuery($q);
+      if ($db->loadResult())
+      {
+        $app->enqueueMessage("Язык уже внесен в Базу Данных", "error");
+      }
+      else
+      {
+        $q = "INSERT INTO #__ccl_languages(name) VALUES ("."'".$obj->name."'".")";//Название языка
+         //---Отправка запроса----
+        $db->setQuery($q);
+        $db->execute();
+        //Сообщение об успешном завершении операции
+        $app->enqueueMessage("Добавление успешно осуществлено", "message");
+      }
     }
     else 
     {
       //---Редактирование (обновление)--
       $q = "UPDATE #__ccl_languages SET name='{$obj->name}' WHERE id={$obj->id}";
-    }
     //---Отправка запроса---------------
     $db->setQuery($q);
     $db->execute();
     //Сообщение об успешном завершении операции
-    
     $app->enqueueMessage("Обновление успешно осуществлено", "message");
+    }
 
     //Переход на отображение списка-------------------
     
